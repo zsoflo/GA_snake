@@ -4,6 +4,7 @@
 import turtle
 import time
 import random
+import ai
 
 delay = 0.1
 
@@ -15,7 +16,7 @@ high_score = 0
 wn = turtle.Screen()
 wn.title("Snake Game by @TokyoEdTech")
 wn.bgcolor("green")
-wn.setup(width=600, height=600)
+wn.setup(width = 600, height = 600)
 wn.tracer(0) # Turns off the screen updates
 
 # Snake head
@@ -33,7 +34,7 @@ food.speed(0)
 food.shape("circle")
 food.color("red")
 food.penup()
-food.goto(0,100)
+food.goto(0, 100)
 
 segments = []
 
@@ -82,8 +83,6 @@ def move():
         head.setx(x + 20)
 
 # Keyboard bindings
-
-
 wn.listen()
 [wn.onkeypress(go_up,    k) for k in ["w", "Up"]]
 [wn.onkeypress(go_down,  k) for k in ["s", "Down"]]
@@ -95,9 +94,9 @@ while True:
     wn.update()
 
     # Check for a collision with the border
-    if head.xcor()>290 or head.xcor()<-290 or head.ycor()>290 or head.ycor()<-290:
+    if head.xcor() > 290 or head.xcor()<-290 or head.ycor()  >  290 or head.ycor()<-290:
         time.sleep(1)
-        head.goto(0,0)
+        head.goto(0, 0)
         head.direction = "stop"
 
         # Hide the segments
@@ -114,15 +113,15 @@ while True:
         delay = 0.1
 
         pen.clear()
-        pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal")) 
+        pen.write("Score: {}  High Score: {}".format(score, high_score), align = "center", font = ("Courier", 24, "normal")) 
 
 
     # Check for a collision with the food
     if head.distance(food) < 20:
         # Move the food to a random spot
-        x = random.randint(-290, 290)
-        y = random.randint(-290, 290)
-        food.goto(x,y)
+        x = random.randint(-14, 14) * 20
+        y = random.randint(-14, 14) * 20
+        food.goto(x, y)
 
         # Add a segment
         new_segment = turtle.Turtle()
