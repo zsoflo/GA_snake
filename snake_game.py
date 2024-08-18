@@ -4,7 +4,11 @@
 import turtle
 import time
 import random
-import ai
+from snake_ai import snake
+
+# AI
+use_ai = True
+ai = snake()
 
 delay = 0.1
 
@@ -180,6 +184,14 @@ while True:
             # Update the score display
             pen.clear()
             pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal"))
+
+    # AI
+    if (use_ai):
+        ai_move = ai.move(food.pos, segments)
+        moves = [go_up, go_down, go_left, go_right]
+        for f in moves:
+            if moves[ai_move] == f:
+                f()
 
     time.sleep(delay)
 
