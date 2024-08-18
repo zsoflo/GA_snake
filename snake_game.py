@@ -82,11 +82,13 @@ def move():
         head.setx(x + 20)
 
 # Keyboard bindings
+
+
 wn.listen()
-wn.onkeypress(go_up, "w")
-wn.onkeypress(go_down, "s")
-wn.onkeypress(go_left, "a")
-wn.onkeypress(go_right, "d")
+[wn.onkeypress(go_up,    k) for k in ["w", "Up"]]
+[wn.onkeypress(go_down,  k) for k in ["s", "Down"]]
+[wn.onkeypress(go_left,  k) for k in ["a", "Left"]]
+[wn.onkeypress(go_right, k) for k in ["d", "Right"]]
 
 # Main game loop
 while True:
