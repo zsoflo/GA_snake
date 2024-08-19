@@ -8,7 +8,8 @@ from network import network
 
 # AI
 use_ai = True
-headless = True
+headless = False
+no_time_delay = False
 ai = network()
 
 delay_reset = 0.1
@@ -23,6 +24,7 @@ wn = turtle.Screen()
 wn.title("Snake Game by TokyoEdTech, AI by Zsofia and Jonathan")
 wn.bgcolor("green")
 wn.setup(width = 600, height = 600)
+wn.tracer(0) # Turns off the screen updates
 
 if headless:
     turtle.getcanvas().winfo_toplevel().withdraw()
@@ -82,30 +84,46 @@ def go_left():
 def go_right():
     head.dir = "right" if (head.dir != "left") else head.dir
 
-if not headless:
-    wn.listen()
-    [wn.onkeypress(go_up,    k) for k in ["w", "Up"]]
-    [wn.onkeypress(go_down,  k) for k in ["s", "Down"]]
-    [wn.onkeypress(go_left,  k) for k in ["a", "Left"]]
-    [wn.onkeypress(go_right, k) for k in ["d", "Right"]]
+wn.listen()
+[wn.onkeypress(go_up,    k) for k in ["w", "Up"]]
+[wn.onkeypress(go_down,  k) for k in ["s", "Down"]]
+[wn.onkeypress(go_left,  k) for k in ["a", "Left"]]
+[wn.onkeypress(go_right, k) for k in ["d", "Right"]]
+
+def write(s):
+    pen.clear()
+    pen.write(s, align = "center", font = ("Courier", 24, "normal"))
+    print(s)
+
+def sleep(t):
+
+    if no_time_delay:
+        return
+
+    time.sleep(t)
+
+    #if not headless or not no_time_delay:
+    #time.sleep(t)
 
 # Main game loop
 while True:
-    wn.update()
+    if not headless:
+        wn.update()
 
     collided_wall = (head.xcor() > 290 or head.xcor() < -290 or head.ycor()  > 290 or head.ycor() < -290)
     collided_body = any([segment.distance(head) < 20 for segment in segments])
 
     if collided_wall or collided_body:
-        # Reset
-        time.sleep(1)
+        sleep(1)
         head.goto(0, 0)
         head.dir = "stop"
+        for segment in segments:
+            segment.goto(1000, 1000)
+        segments.clear()
         score = 0
         delay = delay_reset
 
-        pen.clear()
-        pen.write("Score: {}  High Score: {}".format(score, high_score), align = "center", font = ("Courier", 24, "normal")) 
+        write("Score: {}  High Score: {}".format(score, high_score)) 
 
     # Food
     if head.distance(food) < 20:
@@ -127,13 +145,12 @@ while True:
         if score > high_score:
             high_score = score
         
-        pen.clear()
-        pen.write("Score: {}  High Score: {}".format(score, high_score), align = "center", font = ("Courier", 24, "normal")) 
+        write("Score: {}  High Score: {}".format(score, high_score)) 
 
     # Move the end segments first in reverse order
     for index in range(len(segments)-1, 0, -1):
-        x = segments[index-1].xcor()
-        y = segments[index-1].ycor()
+        x = segments[index - 1].xcor()
+        y = segments[index - 1].ycor()
         segments[index].goto(x, y)
 
     # Move segment 0 to where the head is
@@ -152,6 +169,6 @@ while True:
             if moves[ai_move] == f:
                 f()
 
-    time.sleep(delay)
+    sleep(delay)
 
 wn.mainloop()
