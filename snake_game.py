@@ -10,7 +10,8 @@ from network import network
 use_ai = True
 ai = network()
 
-delay = 0.1
+delay_reset = 0.1
+delay = delay_reset
 
 # Score
 score = 0
@@ -112,9 +113,7 @@ while True:
 
         # Reset the score
         score = 0
-
-        # Reset the delay
-        delay = 0.1
+        delay = delay_reset
 
         pen.clear()
         pen.write("Score: {}  High Score: {}".format(score, high_score), align = "center", font = ("Courier", 24, "normal")) 
@@ -122,7 +121,6 @@ while True:
 
     # Check for a collision with the food
     if head.distance(food) < 20:
-        # Move the food to a random spot
         x = random.randint(-14, 14) * 20
         y = random.randint(-14, 14) * 20
         food.goto(x, y)
@@ -135,10 +133,7 @@ while True:
         new_segment.penup()
         segments.append(new_segment)
 
-        # Shorten the delay
         delay -= 0.001
-
-        # Increase the score
         score += 10
 
         if score > high_score:
@@ -168,21 +163,12 @@ while True:
             head.goto(0,0)
             head.direction = "stop"
         
-            # Hide the segments
-            for segment in segments:
-                segment.goto(1000, 1000)
-        
-            # Clear the segments list
+            # Reset
             segments.clear()
-
-            # Reset the score
             score = 0
-
-            # Reset the delay
-            delay = 0.1
-        
-            # Update the score display
+            delay = delay_reset
             pen.clear()
+        
             pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal"))
 
     # AI
