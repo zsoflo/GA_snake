@@ -8,7 +8,7 @@ from network import network
 
 # AI
 use_ai = True
-headless = False
+headless = True
 ai = network()
 
 delay_reset = 0.1
@@ -19,11 +19,13 @@ score = 0
 high_score = 0
 
 # Set up the screen
-if not headless:
-    wn = turtle.Screen()
-    wn.title("Snake Game by TokyoEdTech, AI by Zsofia and Jonathan")
-    wn.bgcolor("green")
-    wn.setup(width = 600, height = 600)
+wn = turtle.Screen()
+wn.title("Snake Game by TokyoEdTech, AI by Zsofia and Jonathan")
+wn.bgcolor("green")
+wn.setup(width = 600, height = 600)
+
+if headless:
+    turtle.getcanvas().winfo_toplevel().withdraw()
 
 # Snake head
 head = turtle.Turtle()
@@ -89,8 +91,7 @@ if not headless:
 
 # Main game loop
 while True:
-    if not headless:
-        wn.update()
+    wn.update()
 
     collided_wall = (head.xcor() > 290 or head.xcor() < -290 or head.ycor()  > 290 or head.ycor() < -290)
     collided_body = any([segment.distance(head) < 20 for segment in segments])
