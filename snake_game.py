@@ -1,9 +1,14 @@
 # Simple Snake Game in Python 3 for Beginners
-# By @TokyoEdTech
+# By @TokyoEdTech & Zsofia Hauk & Jonathan Alderson
 
 import turtle
 import time
 import random
+from snake_ai import snake
+
+# AI
+use_ai = True
+ai = snake()
 
 delay = 0.1
 
@@ -15,7 +20,7 @@ high_score = 0
 wn = turtle.Screen()
 wn.title("Snake Game by @TokyoEdTech")
 wn.bgcolor("green")
-wn.setup(width=600, height=600)
+wn.setup(width = 600, height = 600)
 wn.tracer(0) # Turns off the screen updates
 
 # Snake head
@@ -33,7 +38,7 @@ food.speed(0)
 food.shape("circle")
 food.color("red")
 food.penup()
-food.goto(0,100)
+food.goto(0, 100)
 
 segments = []
 
@@ -83,19 +88,19 @@ def move():
 
 # Keyboard bindings
 wn.listen()
-wn.onkeypress(go_up, "w")
-wn.onkeypress(go_down, "s")
-wn.onkeypress(go_left, "a")
-wn.onkeypress(go_right, "d")
+[wn.onkeypress(go_up,    k) for k in ["w", "Up"]]
+[wn.onkeypress(go_down,  k) for k in ["s", "Down"]]
+[wn.onkeypress(go_left,  k) for k in ["a", "Left"]]
+[wn.onkeypress(go_right, k) for k in ["d", "Right"]]
 
 # Main game loop
 while True:
     wn.update()
 
     # Check for a collision with the border
-    if head.xcor()>290 or head.xcor()<-290 or head.ycor()>290 or head.ycor()<-290:
+    if head.xcor() > 290 or head.xcor()<-290 or head.ycor()  >  290 or head.ycor()<-290:
         time.sleep(1)
-        head.goto(0,0)
+        head.goto(0, 0)
         head.direction = "stop"
 
         # Hide the segments
@@ -112,15 +117,15 @@ while True:
         delay = 0.1
 
         pen.clear()
-        pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal")) 
+        pen.write("Score: {}  High Score: {}".format(score, high_score), align = "center", font = ("Courier", 24, "normal")) 
 
 
     # Check for a collision with the food
     if head.distance(food) < 20:
         # Move the food to a random spot
-        x = random.randint(-290, 290)
-        y = random.randint(-290, 290)
-        food.goto(x,y)
+        x = random.randint(-14, 14) * 20
+        y = random.randint(-14, 14) * 20
+        food.goto(x, y)
 
         # Add a segment
         new_segment = turtle.Turtle()
@@ -179,6 +184,14 @@ while True:
             # Update the score display
             pen.clear()
             pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal"))
+
+    # AI
+    if (use_ai):
+        ai_move = ai.move(food.pos, segments)
+        moves = [go_up, go_down, go_left, go_right]
+        for f in moves:
+            if moves[ai_move] == f:
+                f()
 
     time.sleep(delay)
 
