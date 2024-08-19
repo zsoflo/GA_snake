@@ -12,7 +12,7 @@ headless = False
 no_time_delay = False
 ai = network()
 
-delay_reset = 0.1
+delay_reset = 0.0 if no_time_delay else 0.1
 delay = delay_reset
 
 # Score
@@ -97,13 +97,10 @@ def write(s):
 
 def sleep(t):
 
-    if no_time_delay:
+    if headless or no_time_delay:
         return
 
     time.sleep(t)
-
-    #if not headless or not no_time_delay:
-    #time.sleep(t)
 
 # Main game loop
 while True:
@@ -139,7 +136,7 @@ while True:
         new_segment.penup()
         segments.append(new_segment)
 
-        delay -= 0.001
+        delay = max(0, delay - 0.001)
         score += 10
 
         if score > high_score:
