@@ -6,20 +6,17 @@ import time
 import random
 from network import network
 
-# AI
 use_ai = True
 headless = False
 no_time_delay = False
 ai = network()
 
+score = 0
+high_score = 0
 delay_reset = 0.0 if no_time_delay else 0.1
 delay = delay_reset
 
-# Score
-score = 0
-high_score = 0
-
-# Set up the screen
+# Screen
 wn = turtle.Screen()
 wn.title("Snake Game by TokyoEdTech, AI by Zsofia and Jonathan")
 wn.bgcolor("green")
@@ -29,7 +26,7 @@ wn.tracer(0) # Turns off the screen updates
 if headless:
     turtle.getcanvas().winfo_toplevel().withdraw()
 
-# Snake head
+# Snake
 head = turtle.Turtle()
 head.speed(0)
 head.shape("square")
@@ -38,6 +35,8 @@ head.penup()
 head.goto(0, 0)
 head.dir = "stop"
 
+segments = []
+
 # Snake food
 food = turtle.Turtle()
 food.speed(0)
@@ -45,8 +44,6 @@ food.shape("circle")
 food.color("red")
 food.penup()
 food.goto(0, 100)
-
-segments = []
 
 # Pen
 pen = turtle.Turtle()
@@ -96,7 +93,6 @@ def write(s):
     print(s)
 
 def sleep(t):
-
     if headless or no_time_delay:
         return
 
