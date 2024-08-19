@@ -9,7 +9,8 @@ class Network(object):
     def __init__(self, sizes):
         
         self.num_layers = len(sizes)
-        self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
+        firstlayerbiases = [0 for y in sizes[0]]
+        self.biases = firstlayerbiases + [np.random.randn(y) for y in sizes[1:]]
         self.weights = [np.random.randn(y, x)
                         for x, y, in zip(sizes[:-1], sizes[1:])]
         
@@ -17,3 +18,38 @@ class Network(object):
         for b, w in zip(self.biases, self.weights):
             a = sigmoid(np.dot(w, a)+b)
         return a
+    
+    def str(self):
+        
+        print(self.biases)
+
+        for layer in self.biases:
+            print("This is a layer, biases: " + str(layer))
+
+        for layer in range(self.num_layers):
+            print("This is layer " + str(layer + 1) +"!")
+
+        for layer in range(self.num_layers):
+            print("This is layer " + str(layer + 1) +"!")
+            print(self.biases[layer])
+
+        # # print(self.biases)
+        # for layer in self.biases:
+        #     print("This is a layer, biases: " + str(layer))
+        #     for neuron in layer:
+        #         print("This is a neuron's bias: " + str(neuron))
+        #         for layer in self.weights:
+        #             for neuron in layer:
+        #                 print("This is a neuron's weights:" + str(neuron))
+
+        # # print(self.weights)
+        # for layer in self.weights:
+        #     print("This is a layer, weights" + str(layer))
+        #     for neuron in layer:
+        #         print("This is a neuron's weights:" + str(neuron))
+
+network1 = Network([4, 4, 4, 4])
+
+network1.str()
+
+
