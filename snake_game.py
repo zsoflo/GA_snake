@@ -8,6 +8,7 @@ from network import network
 
 # AI
 use_ai = True
+headless = False
 ai = network()
 
 delay_reset = 0.1
@@ -18,11 +19,11 @@ score = 0
 high_score = 0
 
 # Set up the screen
-wn = turtle.Screen()
-wn.title("Snake Game by @TokyoEdTech")
-wn.bgcolor("green")
-wn.setup(width = 600, height = 600)
-wn.tracer(0) # Turns off the screen updates
+if not headless:
+    wn = turtle.Screen()
+    wn.title("Snake Game by TokyoEdTech, AI by Zsofia and Jonathan")
+    wn.bgcolor("green")
+    wn.setup(width = 600, height = 600)
 
 # Snake head
 head = turtle.Turtle()
@@ -31,7 +32,7 @@ head.shape("square")
 head.color("black")
 head.penup()
 head.goto(0, 0)
-head.direction = "stop"
+head.dir = "stop"
 
 # Snake food
 food = turtle.Turtle()
@@ -53,79 +54,65 @@ pen.hideturtle()
 pen.goto(0, 260)
 pen.write("Score: 0  High Score: 0", align="center", font=("Courier", 24, "normal"))
 
-# Functions
+# Movement
+def move():
+    if head.dir == "up":
+        head.sety(head.ycor() + 20)
+
+    if head.dir == "down":
+        head.sety(head.ycor() - 20)
+
+    if head.dir == "left":
+        head.setx(head.xcor() - 20)
+
+    if head.dir == "right":
+        head.setx(head.xcor() + 20)
+
 def go_up():
-    if head.direction != "down":
-        head.direction = "up"
+    head.dir = "up" if (head.dir != "down") else head.dir
 
 def go_down():
-    if head.direction != "up":
-        head.direction = "down"
+    head.dir = "down" if (head.dir != "up") else head.dir
 
 def go_left():
-    if head.direction != "right":
-        head.direction = "left"
+    head.dir = "left" if (head.dir != "right") else head.dir
 
 def go_right():
-    if head.direction != "left":
-        head.direction = "right"
+    head.dir = "right" if (head.dir != "left") else head.dir
 
-def move():
-    if head.direction == "up":
-        y = head.ycor()
-        head.sety(y + 20)
-
-    if head.direction == "down":
-        y = head.ycor()
-        head.sety(y - 20)
-
-    if head.direction == "left":
-        x = head.xcor()
-        head.setx(x - 20)
-
-    if head.direction == "right":
-        x = head.xcor()
-        head.setx(x + 20)
-
-# Keyboard bindings
-wn.listen()
-[wn.onkeypress(go_up,    k) for k in ["w", "Up"]]
-[wn.onkeypress(go_down,  k) for k in ["s", "Down"]]
-[wn.onkeypress(go_left,  k) for k in ["a", "Left"]]
-[wn.onkeypress(go_right, k) for k in ["d", "Right"]]
+if not headless:
+    wn.listen()
+    [wn.onkeypress(go_up,    k) for k in ["w", "Up"]]
+    [wn.onkeypress(go_down,  k) for k in ["s", "Down"]]
+    [wn.onkeypress(go_left,  k) for k in ["a", "Left"]]
+    [wn.onkeypress(go_right, k) for k in ["d", "Right"]]
 
 # Main game loop
 while True:
-    wn.update()
+    if not headless:
+        wn.update()
 
-    # Check for a collision with the border
-    if head.xcor() > 290 or head.xcor() < -290 or head.ycor()  > 290 or head.ycor() < -290:
+    collided_wall = (head.xcor() > 290 or head.xcor() < -290 or head.ycor()  > 290 or head.ycor() < -290)
+    collided_body = any([segment.distance(head) < 20 for segment in segments])
+
+    if collided_wall or collided_body:
+        # Reset
         time.sleep(1)
         head.goto(0, 0)
-        head.direction = "stop"
-
-        # Hide the segments
-        for segment in segments:
-            segment.goto(1000, 1000)
-        
-        # Clear the segments list
-        segments.clear()
-
-        # Reset the score
+        head.dir = "stop"
         score = 0
         delay = delay_reset
 
         pen.clear()
         pen.write("Score: {}  High Score: {}".format(score, high_score), align = "center", font = ("Courier", 24, "normal")) 
 
-
-    # Check for a collision with the food
+    # Food
     if head.distance(food) < 20:
         x = random.randint(-14, 14) * 20
         y = random.randint(-14, 14) * 20
         food.goto(x, y)
 
-        # Add a segment
+        # Grow
         new_segment = turtle.Turtle()
         new_segment.speed(0)
         new_segment.shape("square")
@@ -154,22 +141,7 @@ while True:
         y = head.ycor()
         segments[0].goto(x, y)
 
-    move()    
-
-    # Check for head collision with the body segments
-    for segment in segments:
-        if segment.distance(head) < 20:
-            time.sleep(1)
-            head.goto(0,0)
-            head.direction = "stop"
-        
-            # Reset
-            segments.clear()
-            score = 0
-            delay = delay_reset
-            pen.clear()
-        
-            pen.write("Score: {}  High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal"))
+    move()
 
     # AI
     if (use_ai):
