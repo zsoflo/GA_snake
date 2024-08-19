@@ -4,11 +4,11 @@
 import turtle
 import time
 import random
-from snake_ai import snake
+from network import network
 
 # AI
 use_ai = True
-ai = snake()
+ai = network()
 
 delay = 0.1
 
