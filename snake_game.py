@@ -192,6 +192,7 @@ while True:
         for f in moves:
             if moves[ai_move] == f:
                 f()
+        
 
     time.sleep(delay)
 
