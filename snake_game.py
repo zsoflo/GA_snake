@@ -4,12 +4,12 @@
 import turtle
 import time
 import random
-from network import network
+import snake_ai
 
 use_ai = True
 headless = False
 no_time_delay = False
-ai = network()
+ai = snake_ai.zso
 
 score = 0
 high_score = 0

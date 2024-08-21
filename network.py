@@ -9,6 +9,7 @@ class Network(object):
     def __init__(self, sizes):
         
         self.num_layers = len(sizes)
+        self.sizes = sizes
         firstlayerbiases = [np.zeros(sizes[(0)], dtype = float)]
         self.biases = firstlayerbiases + [np.random.randn(y) for y in sizes[1:]]
         self.weights = [np.random.randn(y, x)
@@ -25,4 +26,5 @@ class Network(object):
             print("This is layer " + str(layer + 1) +"!")
             print(self.biases[layer])
 
-network1_test = Network([4, 4, 4, 4])
+# network1_test = Network([4, 4, 4, 4])
+# network1_test.str()
