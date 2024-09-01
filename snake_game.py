@@ -53,7 +53,6 @@ pen.color("white")
 pen.penup()
 pen.hideturtle()
 pen.goto(0, 260)
-pen.write("Score: 0  High Score: 0", align="center", font=("Courier", 24, "normal"))
 
 # Movement
 def move():
@@ -89,8 +88,14 @@ wn.listen()
 
 def write(s):
     pen.clear()
-    pen.write(s, align = "center", font = ("Courier", 24, "normal"))
+    pen.write(s, align = "center", font = ("Courier", 17, "normal"))
     print(s)
+
+def show_score(score, high_score):
+    if (use_ai):
+        write("Score: {}  High Score: {} Fitness: {}".format(score, high_score, ai.fitness)) 
+    else:
+        write("Score: {}  High Score: {}".format(score, high_score)) 
 
 def sleep(t):
     if headless or no_time_delay:
@@ -102,6 +107,8 @@ def sleep(t):
 while True:
     if not headless:
         wn.update()
+
+    show_score(score, high_score)
 
     collided_wall = (head.xcor() > 290 or head.xcor() < -290 or head.ycor()  > 290 or head.ycor() < -290)
     collided_body = any([segment.distance(head) < 20 for segment in segments])
@@ -115,8 +122,7 @@ while True:
         segments.clear()
         score = 0
         delay = delay_reset
-
-        write("Score: {}  High Score: {}".format(score, high_score)) 
+        ai.reset()
 
     # Food
     if head.distance(food) < 20:
@@ -138,7 +144,7 @@ while True:
         if score > high_score:
             high_score = score
         
-        write("Score: {}  High Score: {}".format(score, high_score)) 
+        ai.reward()
 
     # Move the end segments first in reverse order
     for index in range(len(segments)-1, 0, -1):

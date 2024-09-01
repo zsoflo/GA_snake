@@ -10,14 +10,16 @@ class Network(object):
         
         self.num_layers = len(sizes)
         self.sizes = sizes
-        firstlayerbiases = [np.zeros(sizes[(0)], dtype = float)]
-        self.biases = firstlayerbiases + [np.random.randn(y) for y in sizes[1:]]
-        self.weights = [np.random.randn(y, x)
-                        for x, y, in zip(self.sizes[:-1], self.sizes[1:])]
+        firstlayer = [np.zeros(sizes[(0)], dtype = float)]
+        self.biases  = firstlayer + [np.random.randn(y) for y in sizes[1:]]
+        self.weights = firstlayer + [np.random.randn(y, x) for x, y, in zip(self.sizes[:-1], self.sizes[1:])]
         
-    def feedforward(self, a):
+    def feedforward(self, food, head):
+        self.weights[0][np.array(food.x, food.y, head.x, head.y)]
+        print(a)
         for b, w in zip(self.biases, self.weights):
             a = sigmoid(np.dot(w, a) + b)
+        print(a)
         return a
     
     def str(self):
